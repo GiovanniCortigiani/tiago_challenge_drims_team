@@ -143,8 +143,8 @@ void icr_Motionplanning_arms::GripperControl(const std::string & command)
   gripper_control_client_ptr gripper_client;
   const std::string gripper_controller_name = "gripper_controller";  // single generic controller name
   const std::vector<std::string> joint_names = {
-    "gripper_left_finger_joint",  // or just "gripper_finger_joint", adapt as needed
-    "gripper_right_finger_joint"
+    "gripper_finger_joint"  // or just "gripper_finger_joint", adapt as needed
+    // "gripper_right_finger_joint"
   };
 
   try {
@@ -189,11 +189,12 @@ void icr_Motionplanning_arms::SendGripperAction(
 
   if (command == "OPEN") {
     for (size_t i = 0; i < joint_names.size(); ++i) {
-      goal.trajectory.points[0].positions[i] = 0.04;  // example open pos
+      // goal.trajectory.points[0].positions[i] = 0.04;  // example open pos
+      goal.trajectory.points[0].positions[i] = 0.5;  // example open pos
     }
   } else if (command == "CLOSE") {
     for (size_t i = 0; i < joint_names.size(); ++i) {
-      goal.trajectory.points[0].positions[i] = 0.01;  // example close pos
+      goal.trajectory.points[0].positions[i] = 0.7;  // example close pos
     }
   } else {
     RCLCPP_ERROR(this->get_logger(), "Unknown gripper command: %s", command.c_str());
@@ -340,7 +341,7 @@ void icr_Motionplanning_arms::motion_planning_control(
   group_arm.setStartStateToCurrentState();
   group_arm.setMaxVelocityScalingFactor(1.0);
   group_arm.setNumPlanningAttempts(5);
-  group_arm.setGoalTolerance(0.01);
+  group_arm.setGoalTolerance(0.0001);
   group_arm.allowReplanning(true);
   group_arm.setPoseReferenceFrame("base_footprint");
   group_arm.setPlanningTime(0.1);
